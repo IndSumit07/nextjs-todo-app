@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-const TodoSchema = new mongoose.Schema(
+const TrackrSchema = new mongoose.Schema(
   {
     title: {
       type: String,
@@ -38,4 +38,4 @@ const TodoSchema = new mongoose.Schema(
   { timestamps: true },
 );
 
-export default mongoose.models.Todo || mongoose.model("Todo", TodoSchema);
+export default mongoose.models.Trackr || mongoose.model("Trackr", TrackrSchema);

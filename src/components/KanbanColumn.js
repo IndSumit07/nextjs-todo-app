@@ -7,12 +7,12 @@ import {
   useSortable,
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
-import TodoCard from "./TodoCard";
+import TrackrCard from "./TrackrCard";
 import clsx from "clsx";
 
-function SortableTodoItem({ todo, onUpdate, onDelete }) {
+function SortableTrackrItem({ trackr, onUpdate, onDelete }) {
   const { attributes, listeners, setNodeRef, transform, transition } =
-    useSortable({ id: todo._id });
+    useSortable({ id: trackr._id });
 
   const style = {
     transform: CSS.Transform.toString(transform),
@@ -27,7 +27,7 @@ function SortableTodoItem({ todo, onUpdate, onDelete }) {
       {...listeners}
       className="mb-3"
     >
-      <TodoCard todo={todo} onUpdate={onUpdate} onDelete={onDelete} />
+      <TrackrCard trackr={trackr} onUpdate={onUpdate} onDelete={onDelete} />
     </div>
   );
 }
@@ -36,7 +36,7 @@ export default function KanbanColumn({
   id,
   title,
   count,
-  todos,
+  trackrs,
   onUpdate,
   onDelete,
 }) {
@@ -68,18 +68,18 @@ export default function KanbanColumn({
         ref={setNodeRef}
         className={clsx(
           "flex-1 overflow-y-auto space-y-3 min-h-[200px] transition-colors",
-          todos.length === 0 &&
+          trackrs.length === 0 &&
             "bg-gray-100/50 rounded-lg border-2 border-dashed border-gray-200",
         )}
       >
         <SortableContext
-          items={todos.map((t) => t._id)}
+          items={trackrs.map((t) => t._id)}
           strategy={verticalListSortingStrategy}
         >
-          {todos.map((todo) => (
-            <SortableTodoItem
-              key={todo._id}
-              todo={todo}
+          {trackrs.map((trackr) => (
+            <SortableTrackrItem
+              key={trackr._id}
+              trackr={trackr}
               onUpdate={onUpdate}
               onDelete={onDelete}
             />

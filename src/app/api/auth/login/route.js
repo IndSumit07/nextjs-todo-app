@@ -22,7 +22,7 @@ export async function POST(request) {
       return NextResponse.json({ error: "Invalid password" }, { status: 400 });
     }
 
-    const token = signToken(user._id);
+    const token = signToken(user._id.toString());
 
     const response = NextResponse.json({
       message: "Login successful",
@@ -36,6 +36,7 @@ export async function POST(request) {
 
     return response;
   } catch (error) {
+    console.error("Login Error:", error);
     return NextResponse.json({ error: error.message }, { status: 500 });
   }
 }

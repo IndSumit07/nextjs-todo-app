@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import Todo from "@/models/Todo";
+import Trackr from "@/models/Trackr";
 import { getDataFromToken } from "@/lib/auth";
 
 export async function PUT(request, { params }) {
@@ -15,31 +15,31 @@ export async function PUT(request, { params }) {
       await request.json();
 
     await connectDB();
-    const todo = await Todo.findOne({ _id: id, userId });
+    const trackr = await Trackr.findOne({ _id: id, userId });
 
-    if (!todo) {
-      return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+    if (!trackr) {
+      return NextResponse.json({ error: "Trackr not found" }, { status: 404 });
     }
 
-    if (title !== undefined) todo.title = title;
-    if (description !== undefined) todo.description = description;
-    if (dueDate !== undefined) todo.dueDate = dueDate;
+    if (title !== undefined) trackr.title = title;
+    if (description !== undefined) trackr.description = description;
+    if (dueDate !== undefined) trackr.dueDate = dueDate;
 
     // Handle status and completion sync
     if (status !== undefined) {
-      todo.status = status;
-      todo.completed = status === "done";
+      trackr.status = status;
+      trackr.completed = status === "done";
     } else if (completed !== undefined) {
-      todo.completed = completed;
-      todo.status = completed ? "done" : "todo";
+      trackr.completed = completed;
+      trackr.status = completed ? "done" : "todo";
     }
 
-    await todo.save();
+    await trackr.save();
 
     return NextResponse.json({
-      message: "Todo updated",
+      message: "Trackr updated",
       success: true,
-      data: todo,
+      data: trackr,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -56,14 +56,14 @@ export async function DELETE(request, { params }) {
     const { id } = await params;
 
     await connectDB();
-    const result = await Todo.deleteOne({ _id: id, userId });
+    const result = await Trackr.deleteOne({ _id: id, userId });
 
     if (result.deletedCount === 0) {
-      return NextResponse.json({ error: "Todo not found" }, { status: 404 });
+      return NextResponse.json({ error: "Trackr not found" }, { status: 404 });
     }
 
     return NextResponse.json({
-      message: "Todo deleted",
+      message: "Trackr deleted",
       success: true,
     });
   } catch (error) {

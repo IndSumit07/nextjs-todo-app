@@ -13,23 +13,25 @@ import {
 import { clsx } from "clsx";
 import { format } from "date-fns";
 
-export default function TodoCard({ todo, onUpdate, onDelete }) {
+export default function TrackrCard({ trackr, onUpdate, onDelete }) {
   const [isEditing, setIsEditing] = useState(false);
-  const [editedTitle, setEditedTitle] = useState(todo.title);
-  const [editedDesc, setEditedDesc] = useState(todo.description || "");
+  const [editedTitle, setEditedTitle] = useState(trackr.title);
+  const [editedDesc, setEditedDesc] = useState(trackr.description || "");
   const [editedDate, setEditedDate] = useState(
-    todo.dueDate ? new Date(todo.dueDate).toISOString().split("T")[0] : "",
+    trackr.dueDate ? new Date(trackr.dueDate).toISOString().split("T")[0] : "",
   );
   useEffect(() => {
-    setEditedTitle(todo.title);
-    setEditedDesc(todo.description || "");
+    setEditedTitle(trackr.title);
+    setEditedDesc(trackr.description || "");
     setEditedDate(
-      todo.dueDate ? new Date(todo.dueDate).toISOString().split("T")[0] : "",
+      trackr.dueDate
+        ? new Date(trackr.dueDate).toISOString().split("T")[0]
+        : "",
     );
-  }, [todo]);
+  }, [trackr]);
 
   const handleUpdate = () => {
-    onUpdate(todo._id, {
+    onUpdate(trackr._id, {
       title: editedTitle,
       description: editedDesc,
       dueDate: editedDate || null,
@@ -38,21 +40,21 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
   };
 
   const toggleComplete = () => {
-    onUpdate(todo._id, { completed: !todo.completed });
+    onUpdate(trackr._id, { completed: !trackr.completed });
   };
 
   const isOverdue =
-    todo.dueDate &&
-    new Date(todo.dueDate).setHours(0, 0, 0, 0) <
+    trackr.dueDate &&
+    new Date(trackr.dueDate).setHours(0, 0, 0, 0) <
       new Date().setHours(0, 0, 0, 0) &&
-    !todo.completed;
+    !trackr.completed;
 
   return (
     <div
       className={clsx(
         "group relative p-5 bg-white rounded-xl border transition-all duration-200",
         "hover:shadow-md hover:border-gray-300",
-        todo.completed
+        trackr.completed
           ? "border-gray-100 bg-gray-50/50 opacity-75"
           : "border-gray-200",
       )}
@@ -60,16 +62,16 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
       <div className="flex items-start gap-4">
         {/* Checkbox */}
         <button
-          id={`complete-todo-${todo._id}`}
+          id={`complete-trackr-${trackr._id}`}
           onClick={toggleComplete}
           className={clsx(
-            "mt-1 flex-shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
-            todo.completed
+            "mt-1 shrink-0 h-6 w-6 rounded-full border-2 flex items-center justify-center transition-all duration-200",
+            trackr.completed
               ? "bg-black border-black text-white"
               : "border-gray-300 hover:border-black bg-transparent",
           )}
         >
-          {todo.completed && <Check className="h-3.5 w-3.5" />}
+          {trackr.completed && <Check className="h-3.5 w-3.5" />}
         </button>
 
         <div className="flex-1 min-w-0">
@@ -80,7 +82,7 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
                 value={editedTitle}
                 onChange={(e) => setEditedTitle(e.target.value)}
                 className="w-full text-lg font-semibold bg-transparent border-b border-gray-300 focus:border-black outline-none pb-1"
-                placeholder="Task title"
+                placeholder="Trackr title"
                 autoFocus
               />
               <div className="flex items-start gap-2">
@@ -122,30 +124,30 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
               <h3
                 className={clsx(
                   "text-lg font-medium leading-tight transition-colors",
-                  todo.completed
+                  trackr.completed
                     ? "text-gray-400 line-through"
                     : "text-gray-900",
                 )}
               >
-                {todo.title}
+                {trackr.title}
               </h3>
 
-              {todo.description && (
+              {trackr.description && (
                 <p
                   className={clsx(
                     "text-sm line-clamp-2",
-                    todo.completed ? "text-gray-300" : "text-gray-500",
+                    trackr.completed ? "text-gray-300" : "text-gray-500",
                   )}
                 >
-                  {todo.description}
+                  {trackr.description}
                 </p>
               )}
 
-              {todo.dueDate && (
+              {trackr.dueDate && (
                 <div
                   className={clsx(
                     "flex items-center gap-1.5 text-xs mt-2 w-fit px-2 py-1 rounded-md",
-                    todo.completed
+                    trackr.completed
                       ? "text-gray-400 bg-gray-100"
                       : isOverdue
                         ? "text-red-600 bg-red-50"
@@ -153,15 +155,7 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
                   )}
                 >
                   <Calendar className="h-3 w-3" />
-                  <span>
-                    {(() => {
-                      const dateObj = new Date(todo.dueDate);
-                      const year = dateObj.getUTCFullYear();
-                      const month = dateObj.getUTCMonth();
-                      const day = dateObj.getUTCDate();
-                      return format(new Date(year, month, day), "MMM d, yyyy");
-                    })()}
-                  </span>
+                  <span>{format(new Date(trackr.dueDate), "MMM d, yyyy")}</span>
                   {isOverdue && (
                     <span className="font-medium ml-1">Overdue</span>
                   )}
@@ -174,15 +168,15 @@ export default function TodoCard({ todo, onUpdate, onDelete }) {
         {!isEditing && (
           <div className="flex items-center gap-1 opacity-100 sm:opacity-0 sm:group-hover:opacity-100 transition-opacity">
             <button
-              id={`edit-todo-${todo._id}`}
+              id={`edit-trackr-${trackr._id}`}
               onClick={() => setIsEditing(true)}
               className="p-2 text-gray-400 hover:text-black hover:bg-gray-100 rounded-lg transition-colors"
             >
               <Edit2 className="h-4 w-4" />
             </button>
             <button
-              id={`delete-todo-${todo._id}`}
-              onClick={() => onDelete(todo._id)}
+              id={`delete-trackr-${trackr._id}`}
+              onClick={() => onDelete(trackr._id)}
               className="p-2 text-gray-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
             >
               <Trash2 className="h-4 w-4" />

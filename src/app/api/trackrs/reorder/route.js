@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import Todo from "@/models/Todo";
+import Trackr from "@/models/Trackr";
 import { getDataFromToken } from "@/lib/auth";
 
 export async function PUT(request) {
@@ -10,30 +10,30 @@ export async function PUT(request) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
-    const { todos } = await request.json();
+    const { trackrs } = await request.json();
 
-    if (!Array.isArray(todos)) {
+    if (!Array.isArray(trackrs)) {
       return NextResponse.json({ error: "Invalid data" }, { status: 400 });
     }
 
     await connectDB();
 
     // Bulk write for better performance
-    const operations = todos.map((todo) => ({
+    const operations = trackrs.map((trackr) => ({
       updateOne: {
-        filter: { _id: todo._id, userId },
+        filter: { _id: trackr._id, userId },
         update: {
           $set: {
-            order: todo.order,
-            status: todo.status,
-            completed: todo.status === "done",
+            order: trackr.order,
+            status: trackr.status,
+            completed: trackr.status === "done",
           },
         },
       },
     }));
 
     if (operations.length > 0) {
-      await Todo.bulkWrite(operations);
+      await Trackr.bulkWrite(operations);
     }
 
     return NextResponse.json({

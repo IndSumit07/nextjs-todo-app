@@ -5,14 +5,14 @@ import { Toaster } from "sonner";
 const spaceGrotesk = Space_Grotesk({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Professional Todo App",
-  description: "A minimal, secure, and professional Todo application.",
+  title: "Trackr",
+  description: "A minimal, secure, and professional task tracking application.",
 };
 
 export default function RootLayout({ children }) {
   return (
-    <html lang="en">
-      <body className={spaceGrotesk.className}>
+    <html lang="en" suppressHydrationWarning>
+      <body className={spaceGrotesk.className} suppressHydrationWarning>
         {children}
         <Toaster position="bottom-right" theme="light" />
       </body>

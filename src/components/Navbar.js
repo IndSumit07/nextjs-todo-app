@@ -24,7 +24,7 @@ export default function Navbar({ user }) {
         <div className="flex justify-between h-16 items-center">
           <div className="flex items-center gap-2">
             <CheckSquare className="h-6 w-6 text-black" />
-            <span className="font-bold text-xl tracking-tight">Todos</span>
+            <span className="font-bold text-xl tracking-tight">Trackr</span>
           </div>
           <div className="flex items-center gap-4">
             {user && (

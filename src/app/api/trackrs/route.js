@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import connectDB from "@/lib/db";
-import Todo from "@/models/Todo";
+import Trackr from "@/models/Trackr";
 import { getDataFromToken } from "@/lib/auth";
 
 export async function GET(request) {
@@ -11,11 +11,14 @@ export async function GET(request) {
     }
 
     await connectDB();
-    const todos = await Todo.find({ userId }).sort({ order: 1, createdAt: -1 });
+    const trackrs = await Trackr.find({ userId }).sort({
+      order: 1,
+      createdAt: -1,
+    });
 
     return NextResponse.json({
       success: true,
-      data: todos,
+      data: trackrs,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
@@ -32,19 +35,19 @@ export async function POST(request) {
     await connectDB();
     const { title, description, dueDate } = await request.json();
 
-    const newTodo = new Todo({
+    const newTrackr = new Trackr({
       title,
       description,
       dueDate: dueDate ? new Date(dueDate) : undefined,
       userId,
     });
 
-    await newTodo.save();
+    await newTrackr.save();
 
     return NextResponse.json({
-      message: "Todo created",
+      message: "Trackr created",
       success: true,
-      data: newTodo,
+      data: newTrackr,
     });
   } catch (error) {
     return NextResponse.json({ error: error.message }, { status: 500 });
